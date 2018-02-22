@@ -21,7 +21,7 @@ ctx.stroke();
 ctx.closePath();
 
 ctx.beginPath();
-ctx.rect(370, 270, 100, 40);
+ctx.rect(420, 270, 40, 40);
 ctx.fillStyle = "#FFFF00";
 ctx.fill();
 ctx.closePath();
