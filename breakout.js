@@ -1,27 +1,111 @@
+//Setup the canvas
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
-ctx.beginPath();
-ctx.rect(20, 40, 100, 50);
-ctx.fillStyle = "#FF0000";
-ctx.fill();
-ctx.closePath();
+//Set the starting paoint
+var x = canvas.width/2;
+var y = canvas.height-30;
+var ballRadius = 10;
+
+//Define paddle
+var paddleHeight = 10
+var paddleWidth = 75
+var paddleX = (canvas.width-paddleWidth)/2;
+
+//Paddle movement
+var rightPressed = false;
+var leftPressed = false;
+
+//Moving Ball
+var dx = 2;
+var dy = -2;
+
+//Ball colour
+var ballColour = "#0095DD"
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keydown", keyUpHandler, false);
 
 
-ctx.beginPath();
-ctx.rect(240, 160, 20, 0);
-ctx.fillStyle = "green";
-ctx.fill();
-ctx.closePath();
+function keyDownHandler(e){
+		if(e.keyCode == 39){
+			rightPressed == true;
+		}
+		else if(e.keyCode == 37) {
+			leftPressed = true;
+		}
+	}
+		
+	function keyUpHandler(e){
+		if(e.keyCode == 39){
+			rightPressed == false;
+		}
+		else if(e.keyCode == 37) {
+			leftPressed = false;
+		}
+	}
 
-ctx.beginPath();
-ctx.rect(160, 10, 100, 40);
-ctx.strokeStyle = "rgba(0, 0, 255, 0.5";
-ctx.stroke();
-ctx.closePath();
+//Draw the ball
+function drawBall()
+ {
+	ctx.beginPath();
+	ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+	ctx.fillStyle = ballColour;
+	ctx.fill();
+	ctx.closePath();
+	
+}
 
-ctx.beginPath();
-ctx.rect(430, 270, 40, 40);
-ctx.fillStyle = "#FFFF00";
-ctx.fill();
-ctx.closePath();
+//Draw paddle
+function drawPaddle(){
+	ctx.beginPath();
+	ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+	ctx.fillStyle = "#0095DD"
+	ctx.fill();
+	ctx.closePath();
+	
+	}
+	
+	if(rightPressed) {
+		paddleX +=7;
+	}
+	else if(leftPressed) {
+		paddleX -=7;
+	}
+	
+	if(rightPressed && paddleX < canvas.width-paddleWidth){
+		paddleX +=7;
+	}
+	else if(leftPressed && paddleX > 0){
+		paddleX -= 7;
+	}
+
+function draw()
+ {
+	 
+	if(y + dy > canvas.height-ballRadius || y + dy < ballRadius){
+		dy = -dy;
+		ballColour = "red";
+		ballRadius = 10;
+	}
+	if(x + dx > canvas.width-ballRadius || x + dx < ballRadius){
+		dx = -dx;
+		ballColour = "yellow";
+		ballRadius = 5;
+	}
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	drawBall();
+	x += dx;
+    y += dy;
+}
+
+//Bounce the ball of 3 walls 
+
+
+setInterval(draw, 10);
+
+
+
+
+
+
