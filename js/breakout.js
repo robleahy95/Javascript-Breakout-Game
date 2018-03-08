@@ -23,7 +23,7 @@ var dy = -2;
 //Ball colour
 var ballColour = "#0095DD";
 
-/*Setup some bricks
+//Setup some bricks
 var brickRowCount = 3;
 var brickColumnCount = 5;
 var brickWidth = 75;
@@ -32,7 +32,31 @@ var brickPadding = 10;
 var brickOffsetTop = 30; 
 var brickOffsetLeft = 30;
 
-*/
+//Hold the bricks in a two-dimensional array
+var bricks = [];
+for(c=0; c<brickColumnCount; c++) {
+	bricks[c] = [];
+	for(r=0; r<brickRowCount; r++) {
+		bricks[c][r] = { x: 0, y: 0, status: 1 };
+	}
+}
+
+//This function draws the bricks
+function drawBricks() {
+	for(c=0; c<brickColumnCount; c++) {
+		for(r=0; r<brickRowCount; r++) {
+			var brickX = (c*(brickWidth+brickPadding))+brickOffsetLeft;
+			var brickY = (r*(brickHeight+brickPadding))+brickOffsetTop;
+			bricks[c][r].x = brickX;
+			bricks[c][r].y = brickY;
+			ctx.beginPath();
+			ctx.rect(brickX, brickY, brickWidth, brickHeight);
+			ctx.fillStyle = "#0095DD";
+			ctx.fill();
+			ctx.closePath;
+		}
+	}
+}
 
 
 //Draw the ball
@@ -64,6 +88,9 @@ function draw(){
 	dx = -dx;
 	}
 	
+	//draw the bricks
+	drawBricks(); 
+	
 	if(y + dy < ballRadius) {
 		dy = -dy;
 	}
@@ -74,6 +101,8 @@ function draw(){
 		}
 		else {
 			alert("GAME OVER");
+			x = canvas.width /2;
+			y = canvas.height-30;
 			document.location.reload();
 		}
 	}
