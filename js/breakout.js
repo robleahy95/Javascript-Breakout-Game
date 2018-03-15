@@ -20,6 +20,8 @@ var leftPressed = false;
 var dx = 2;
 var dy = -2;
 
+//lives
+var lives = 3;
 
 //Ball colour
 var ballColour = "#0095DD";
@@ -79,7 +81,7 @@ function collisionDetection() {
 				if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
 					dy = -dy; 
 					b.status = 0;
-					score+=5;
+					score++;
 					SCORE_SOUND.play();
 					if(score == brickRowCount*brickColumnCount) {
 						WINNING_SOUND.play();
@@ -108,6 +110,14 @@ function drawScore() {
 	document.getElementById("gamescore").innerHTML = "Score: " + score;
 }
 
+//lives
+function drawLives() {
+	ctx.font = "16px Arial";
+	ctx.fillStyle = "#0095DD"
+	ctx.fillText("Lives: "+lives, canvas.width-65, 20);
+	document.getElementById("gamelives").innerHTML = "Lives: " + lives;
+}
+
 //Draw the ball
 function drawBall(){
 	ctx.beginPath();
@@ -131,11 +141,9 @@ function draw(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	drawBall();
 	drawPaddle();
-	
-	//Bounce the ball of 3 walls 
-	if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
-	dx = -dx;
-	}
+
+	//lives
+	drawLives();
 	
 	//draw the bricks
 	drawBricks(); 
@@ -146,6 +154,11 @@ function draw(){
 	//score
 	drawScore();
 	
+		
+	//Bounce the ball of 3 walls 
+	if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+	dx = -dx;
+	}
 	if(y + dy < ballRadius) {
 		dy = -dy;
 	}
@@ -155,11 +168,21 @@ function draw(){
 			dy = -dy;
 		}
 		else {
-			GAMEOVER_SOUND.play();
-			alert("GAME OVER");
-			x = canvas.width /2;
-			y = canvas.height-30;
-			document.location.reload();
+			lives--;
+			if(!lives) {
+				GAMEOVER_SOUND.play();
+				alert("GAME OVER");
+				x = canvas.width /2;
+				y = canvas.height-30;
+				document.location.reload();
+			}
+			else {
+				x = canvas.width/2;
+				y = canvas.height-30;
+				dx = 2;
+				dy = -2;
+				paddleX = (canvas.width-paddleWidth)/2;
+			}
 		}
 	}
 	
@@ -172,11 +195,8 @@ function draw(){
 	
 	x += dx;
     y += dy;
-}
 
-
-
-
+}//end of draw function 
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -202,9 +222,3 @@ function keyUpHandler(e){
 }
 
 setInterval(draw, 10);
-
-
-
-
-
-
