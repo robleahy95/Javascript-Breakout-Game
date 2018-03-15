@@ -20,8 +20,6 @@ var leftPressed = false;
 var dx = 2;
 var dy = -2;
 
-//counting the score
-var score = 0;
 
 //Ball colour
 var ballColour = "#0095DD";
@@ -43,6 +41,15 @@ for(c=0; c<brickColumnCount; c++) {
 		bricks[c][r] = { x: 0, y: 0, status: 1 };
 	}
 }
+
+//counting the score
+var score = 0;
+
+//game sound
+var WINNING_SOUND = new Audio('sounds/woohoo.wav');
+var SCORE_SOUND = new Audio('sounds/success.wav');
+var GAMEOVER_SOUND = new Audio('sounds/gameover.wav');
+
 
 //This function draws the bricks
 function drawBricks() {
@@ -72,12 +79,26 @@ function collisionDetection() {
 				if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
 					dy = -dy; 
 					b.status = 0;
+					score+=5;
+					SCORE_SOUND.play();
+					if(score == brickRowCount*brickColumnCount) {
+						WINNING_SOUND.play();
+						alert("YOU WIN, CONGRATS!");
+						document.location.reload();
+					}
 				}
 			}
 		}
 	}
 }
 
+//Draw score
+function drawScore() {
+	ctx.font = "16px Arial";
+	ctx.fillStyle = "#0095DD";
+	ctx.fillText("Score: "+score, 8, 20);
+	document.getElementById("gamescore").innerHTML = "Score: " + score;
+}
 
 //Draw the ball
 function drawBall(){
@@ -114,6 +135,9 @@ function draw(){
 	//Collision
 	collisionDetection();
 	
+	//score
+	drawScore();
+	
 	if(y + dy < ballRadius) {
 		dy = -dy;
 	}
@@ -123,6 +147,7 @@ function draw(){
 			dy = -dy;
 		}
 		else {
+			GAMEOVER_SOUND.play();
 			alert("GAME OVER");
 			x = canvas.width /2;
 			y = canvas.height-30;
